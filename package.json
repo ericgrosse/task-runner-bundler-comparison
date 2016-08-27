@@ -24,6 +24,7 @@
     "gulp-livereload": "^3.8.1",
     "gulp-mocha": "^3.0.1",
     "gulp-nodemon": "^2.1.0",
+    "gulp-open": "^2.0.0",
     "gulp-sass": "^2.3.2",
     "gulp-sequence": "^0.4.5",
     "gulp-sourcemaps": "^1.6.0",

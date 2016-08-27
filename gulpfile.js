@@ -14,6 +14,7 @@ const runSequence = require('run-sequence');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const del = require('del');
+const open = require('gulp-open');
 const livereload = require('gulp-livereload');
 livereload.listen({basePath: 'dist'});
 require('babel-core/register'); // Needed for mocha tests
@@ -32,6 +33,11 @@ gulp.task('server', () => {
   nodemon({
     script: 'app.js'
   });
+});
+
+gulp.task('open', ['server'], () => {
+  gulp.src('dist/index.html')
+  .pipe(open({uri: 'http://localhost:3000/'}));
 });
 
 gulp.task('clean', () => {
@@ -74,7 +80,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', (cb) => {
-  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'server', 'watch', cb);
+  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'open', 'watch', cb);
 });
 
 function bundle() {
