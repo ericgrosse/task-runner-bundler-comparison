@@ -2,7 +2,9 @@ import React from 'react';
 
 const ContactPage = ({props}) => {
   return (
-    <div>Contact Page</div>
+    <div className="ContactPage">
+      Contact Page
+    </div>
   );
 };
 

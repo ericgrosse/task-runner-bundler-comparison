@@ -4,8 +4,8 @@ import Header from './common/Header';
 const App = (props) => {
   return (
     <div>
-    <Header/>
-    {props.children}
+      <Header />
+      {props.children}
     </div>
   );
 }

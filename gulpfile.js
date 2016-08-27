@@ -10,6 +10,9 @@ const nodemon = require('gulp-nodemon');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const gulpSequence = require('gulp-sequence');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const del = require('del');
 const livereload = require('gulp-livereload');
 livereload.listen({basePath: 'dist'});
 require('babel-core/register'); // Needed for mocha tests
@@ -30,6 +33,10 @@ gulp.task('server', () => {
   });
 });
 
+gulp.task('clean', () => {
+  return del('./dist/**/*');
+});
+
 gulp.task('test', () => {
   return gulp.src('./app/**/*.test.js', {read: false})
   .pipe(mocha());
@@ -41,7 +48,7 @@ gulp.task('lint', () => {
   .pipe(eslint.format())
 });
 
-gulp.task('bundle', bundle);
+gulp.task('js', bundle);
 
 gulp.task('html', () => {
   return gulp.src('./app/index.html')
@@ -49,12 +56,21 @@ gulp.task('html', () => {
   .pipe(livereload());
 });
 
+gulp.task('css', () => {
+  return gulp.src('./app/**/*.scss')
+  .pipe(sass().on('error', sass.logError))
+  .pipe(concat('bundle.css'))
+  .pipe(gulp.dest('./dist'))
+  .pipe(livereload());
+});
+
 gulp.task('watch', () => {
   gulp.watch('./app/index.html', ['html']);
+  gulp.watch('./app/**/*.scss', ['css']);
   gulp.watch('./app/**/*.js', ['lint', 'test']);
 });
 
-gulp.task('default', gulpSequence('lint', 'test', 'html', 'bundle', 'server', 'watch'));
+gulp.task('default', gulpSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'server', 'watch'));
 
 function bundle() {
   return b.bundle()
