@@ -29,6 +29,13 @@ if (argv.prod) {
 
 let PROD = process.env.NODE_ENV === 'production';
 
+const config = {
+  port: PROD ? 8080 : 3000,
+  paths: {
+    baseDir: PROD ? 'build' : 'dist'
+  }
+};
+
 const browserifyOptions = {
   entries: ['./app/index.js'],
   debug: true
@@ -46,8 +53,8 @@ gulp.task('server', () => {
 });
 
 gulp.task('open', ['server'], () => {
-  gulp.src(cond(PROD, 'build/index.html', 'dist/index.html'))
-  .pipe(open({uri: 'http://localhost:3000/'}));
+  gulp.src(config.paths.baseDir + '/index.html')
+  .pipe(open({uri: `http://localhost:${config.port}/`}));
 });
 
 gulp.task('clean', () => {
@@ -69,7 +76,7 @@ gulp.task('js', bundle);
 
 gulp.task('html', () => {
   return gulp.src('./app/index.html')
-  .pipe(cond(PROD, gulp.dest('./build'), gulp.dest('./dist')))
+  .pipe(gulp.dest(config.paths.baseDir))
   .pipe(livereload());
 });
 
@@ -86,14 +93,13 @@ gulp.task('css', () => {
   .pipe(concat('bundle.css'))
   .pipe(cond(PROD, minifyCSS()))
   .pipe(cond(!PROD, sourcemaps.write()))
-  .pipe(cond(PROD, gulp.dest('./build'), gulp.dest('./dist'))
-  )
+  .pipe(gulp.dest(config.paths.baseDir))
   .pipe(livereload());
 });
 
 gulp.task('fonts', () => {
   return gulp.src('node_modules/font-awesome/fonts/**')
-  .pipe(cond(PROD, gulp.dest('./build/fonts'), gulp.dest('./dist/fonts')));
+  .pipe(gulp.dest(config.paths.baseDir + '/fonts'));
 });
 
 gulp.task('watch', () => {
@@ -116,6 +122,6 @@ function bundle() {
   .pipe(cond(PROD, minifyJS()))
   .pipe(cond(!PROD, sourcemaps.init({loadMaps: true})))
   .pipe(cond(!PROD, sourcemaps.write()))
-  .pipe(cond(PROD, gulp.dest('./build'), gulp.dest('./dist')))
+  .pipe(gulp.dest(config.paths.baseDir))
   .pipe(livereload());
 }
