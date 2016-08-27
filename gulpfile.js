@@ -7,6 +7,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const nodemon = require('gulp-nodemon');
+const eslint = require('gulp-eslint');
 const livereload = require('gulp-livereload');
 livereload.listen({basePath: 'dist'});
 
@@ -24,6 +25,12 @@ gulp.task('server', () => {
   nodemon({
     script: 'app.js'
   });
+});
+
+gulp.task('lint', () => {
+  return gulp.src(['./app/**/*.js', '!node_modules/**'])
+  .pipe(eslint())
+  .pipe(eslint.format())
 });
 
 gulp.task('bundle', bundle);
