@@ -64,9 +64,17 @@ gulp.task('html', () => {
 });
 
 gulp.task('css', () => {
-  return gulp.src('./app/**/*.scss')
+  return gulp.src(
+    [
+      'node_modules/bootstrap/dist/css/bootstrap.css',
+      'node_modules/font-awesome/css/font-awesome.css',
+      './app/**/*.scss'
+    ]
+  )
+  .pipe(sourcemaps.init())
   .pipe(sass().on('error', sass.logError))
   .pipe(concat('bundle.css'))
+  .pipe(sourcemaps.write())
   .pipe(gulp.dest('./dist'))
   .pipe(livereload());
 });
