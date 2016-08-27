@@ -15,9 +15,14 @@ const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const del = require('del');
 const open = require('gulp-open');
+const cond = require('gulp-cond');
+const minifyJS = require('gulp-uglify');
+const minifyCSS = require('gulp-clean-css');
 const livereload = require('gulp-livereload');
 livereload.listen({basePath: 'dist'});
 require('babel-core/register'); // Needed for mocha tests
+
+let PROD = process.env.NODE_ENV === 'production';
 
 const browserifyOptions = {
   entries: ['./app/index.js'],
@@ -36,12 +41,12 @@ gulp.task('server', () => {
 });
 
 gulp.task('open', ['server'], () => {
-  gulp.src('dist/index.html')
+  gulp.src(cond(PROD, 'build/index.html', 'dist/index.html'))
   .pipe(open({uri: 'http://localhost:3000/'}));
 });
 
 gulp.task('clean', () => {
-  return del('./dist/**/*');
+  return del(['./dist/**/*', './build/**/*']);
 });
 
 gulp.task('test', () => {
@@ -59,7 +64,7 @@ gulp.task('js', bundle);
 
 gulp.task('html', () => {
   return gulp.src('./app/index.html')
-  .pipe(gulp.dest('./dist'))
+  .pipe(cond(PROD, gulp.dest('./build'), gulp.dest('./dist')))
   .pipe(livereload());
 });
 
@@ -71,17 +76,19 @@ gulp.task('css', () => {
       './app/**/*.scss'
     ]
   )
-  .pipe(sourcemaps.init())
+  .pipe(cond(!PROD, sourcemaps.init()))
   .pipe(sass().on('error', sass.logError))
   .pipe(concat('bundle.css'))
-  .pipe(sourcemaps.write())
-  .pipe(gulp.dest('./dist'))
+  .pipe(cond(PROD, minifyCSS()))
+  .pipe(cond(!PROD, sourcemaps.write()))
+  .pipe(cond(PROD, gulp.dest('./build'), gulp.dest('./dist'))
+  )
   .pipe(livereload());
 });
 
 gulp.task('fonts', () => {
   return gulp.src('node_modules/font-awesome/fonts/**')
-  .pipe(gulp.dest('./dist/fonts'));
+  .pipe(cond(PROD, gulp.dest('./build/fonts'), gulp.dest('./dist/fonts')));
 });
 
 gulp.task('watch', () => {
@@ -96,13 +103,24 @@ gulp.task('default', (cb) => {
   runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
 });
 
+gulp.task('build', (cb) => {
+  runSequence('set-prod-node-env', 'clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
+});
+
+gulp.task('set-prod-node-env', () => {
+  process.env.NODE_ENV = 'production';
+  PROD = process.env.NODE_ENV === 'production';
+  return;
+});
+
 function bundle() {
   return b.bundle()
   .on('error', gutil.log.bind(gutil, 'Browserify Error'))
   .pipe(source('bundle.js'))
   .pipe(buffer())
-  .pipe(sourcemaps.init({loadMaps: true}))
-  .pipe(sourcemaps.write())
-  .pipe(gulp.dest('./dist'))
+  .pipe(cond(PROD, minifyJS()))
+  .pipe(cond(!PROD, sourcemaps.init({loadMaps: true})))
+  .pipe(cond(!PROD, sourcemaps.write()))
+  .pipe(cond(PROD, gulp.dest('./build'), gulp.dest('./dist')))
   .pipe(livereload());
 }
