@@ -79,6 +79,11 @@ gulp.task('css', () => {
   .pipe(livereload());
 });
 
+gulp.task('fonts', () => {
+  return gulp.src('node_modules/font-awesome/fonts/**')
+  .pipe(gulp.dest('./dist/fonts'));
+});
+
 gulp.task('watch', () => {
   gulp.watch('./app/index.html', ['html']);
   gulp.watch('./app/**/*.scss', ['css']);
@@ -88,7 +93,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', (cb) => {
-  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'open', 'watch', cb);
+  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
 });
 
 function bundle() {
