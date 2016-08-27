@@ -10,6 +10,7 @@ const nodemon = require('gulp-nodemon');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const gulpSequence = require('gulp-sequence');
+const runSequence = require('run-sequence');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const del = require('del');
@@ -67,10 +68,14 @@ gulp.task('css', () => {
 gulp.task('watch', () => {
   gulp.watch('./app/index.html', ['html']);
   gulp.watch('./app/**/*.scss', ['css']);
-  gulp.watch('./app/**/*.js', ['lint', 'test']);
+  gulp.watch('./app/**/*.js', () => {
+    runSequence('lint', 'test');
+  });
 });
 
-gulp.task('default', gulpSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'server', 'watch'));
+gulp.task('default', (cb) => {
+  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'server', 'watch', cb);
+});
 
 function bundle() {
   return b.bundle()
