@@ -8,8 +8,10 @@ const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const nodemon = require('gulp-nodemon');
 const eslint = require('gulp-eslint');
+const mocha = require('gulp-mocha');
 const livereload = require('gulp-livereload');
 livereload.listen({basePath: 'dist'});
+require('babel-core/register'); // Needed for mocha tests
 
 const browserifyOptions = {
   entries: ['./app/index.js'],
@@ -17,7 +19,7 @@ const browserifyOptions = {
 };
 const opts = assign({}, watchify.args, browserifyOptions);
 const b = watchify(browserify(opts));
-b.transform('babelify', {presets: ['react', 'es2015']})
+b.transform('babelify')
 b.on('update', bundle);
 b.on('log', gutil.log);
 
@@ -27,8 +29,13 @@ gulp.task('server', () => {
   });
 });
 
+gulp.task('test', () => {
+  gulp.src('./app/**/*.test.js', {read: false})
+  .pipe(mocha());
+});
+
 gulp.task('lint', () => {
-  return gulp.src(['./app/**/*.js', '!node_modules/**'])
+  gulp.src('./app/**/*.js')
   .pipe(eslint())
   .pipe(eslint.format())
 });
@@ -43,10 +50,11 @@ gulp.task('html', () => {
 
 gulp.task('watch', () => {
   gulp.watch('./app/index.html', ['html']);
-  gulp.watch(['./app/**/*.js', '!node_modules/**'], ['lint'])
+  gulp.watch('./app/**/*.js', ['lint'])
+  gulp.watch('./app/**/*.test.js', ['test'])
 });
 
-gulp.task('default', ['server', 'lint', 'html', 'bundle', 'watch']);
+gulp.task('default', ['server', 'lint', 'test', 'html', 'bundle', 'watch']);
 
 function bundle() {
   return b.bundle()
