@@ -43,9 +43,10 @@ gulp.task('html', () => {
 
 gulp.task('watch', () => {
   gulp.watch('./app/index.html', ['html']);
+  gulp.watch(['./app/**/*.js', '!node_modules/**'], ['lint'])
 });
 
-gulp.task('default', ['server', 'html', 'bundle', 'watch']);
+gulp.task('default', ['server', 'lint', 'html', 'bundle', 'watch']);
 
 function bundle() {
   return b.bundle()
