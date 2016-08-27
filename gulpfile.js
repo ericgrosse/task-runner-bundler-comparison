@@ -18,9 +18,14 @@ const open = require('gulp-open');
 const cond = require('gulp-cond');
 const minifyJS = require('gulp-uglify');
 const minifyCSS = require('gulp-clean-css');
+const {argv} = require('yargs');
 const livereload = require('gulp-livereload');
 livereload.listen({basePath: 'dist'});
 require('babel-core/register'); // Needed for mocha tests
+
+if (argv.prod) {
+  process.env.NODE_ENV = 'production';
+}
 
 let PROD = process.env.NODE_ENV === 'production';
 
@@ -101,16 +106,6 @@ gulp.task('watch', () => {
 
 gulp.task('default', (cb) => {
   runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
-});
-
-gulp.task('build', (cb) => {
-  runSequence('set-prod-node-env', 'clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
-});
-
-gulp.task('set-prod-node-env', () => {
-  process.env.NODE_ENV = 'production';
-  PROD = process.env.NODE_ENV === 'production';
-  return;
 });
 
 function bundle() {

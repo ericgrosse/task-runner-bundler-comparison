@@ -36,7 +36,8 @@
     "run-sequence": "^1.2.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "yargs": "^5.0.0"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
