@@ -1,5 +1,7 @@
-import dep1 from './dep1';
-import dep2 from './dep2';
+import 'babel-polyfill';
+import React from 'react';
+import {render} from 'react-dom';
+import {Router, browserHistory} from 'react-router';
+import routes from './routes';
 
-console.log(dep1);
-console.log(dep2);
+render(<Router history={browserHistory} routes={routes} />, document.getElementById('app'));

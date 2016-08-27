@@ -16,7 +16,7 @@ const browserifyOptions = {
 };
 const opts = assign({}, watchify.args, browserifyOptions);
 const b = watchify(browserify(opts));
-b.transform('babelify', {presets: ['es2015']})
+b.transform('babelify', {presets: ['react', 'es2015']})
 b.on('update', bundle);
 b.on('log', gutil.log);
 
