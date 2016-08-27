@@ -51,8 +51,7 @@ gulp.task('html', () => {
 
 gulp.task('watch', () => {
   gulp.watch('./app/index.html', ['html']);
-  gulp.watch('./app/**/*.js', ['lint'])
-  gulp.watch('./app/**/*.test.js', ['test'])
+  gulp.watch('./app/**/*.js', ['lint', 'test']);
 });
 
 gulp.task('default', gulpSequence('lint', 'test', 'html', 'bundle', 'server', 'watch'));
