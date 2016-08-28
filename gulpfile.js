@@ -1,33 +1,36 @@
+// Gulp imports
 const gulp = require('gulp');
-const browserify = require('browserify');
-const watchify = require('watchify');
-const assign = require('lodash.assign');
-const gutil = require('gulp-util');
+const minifyCSS = require('gulp-clean-css');
+const concat = require('gulp-concat');
+const cond = require('gulp-cond');
+const eslint = require('gulp-eslint');
+const livereload = require('gulp-livereload');
+const mocha = require('gulp-mocha');
+const nodemon = require('gulp-nodemon');
+const open = require('gulp-open');
+const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
+const minifyJS = require('gulp-uglify');
+const gutil = require('gulp-util');
+
+// Other libraries
+const browserify = require('browserify');
+const del = require('del');
+const assign = require('lodash.assign');
+const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const nodemon = require('gulp-nodemon');
-const eslint = require('gulp-eslint');
-const mocha = require('gulp-mocha');
-const runSequence = require('run-sequence');
-const sass = require('gulp-sass');
-const concat = require('gulp-concat');
-const del = require('del');
-const open = require('gulp-open');
-const cond = require('gulp-cond');
-const minifyJS = require('gulp-uglify');
-const minifyCSS = require('gulp-clean-css');
+const watchify = require('watchify');
 const {argv} = require('yargs');
-const livereload = require('gulp-livereload');
-livereload.listen({basePath: 'dist'});
 require('babel-core/register'); // Needed for mocha tests
 
+// If gulp was called in the terminal with the --prod flag, set the node environment to production
 if (argv.prod) {
   process.env.NODE_ENV = 'production';
 }
-
 let PROD = process.env.NODE_ENV === 'production';
 
+// Configuration
 const src = 'app';
 const config = {
   port: PROD ? 8080 : 3000,
@@ -41,50 +44,46 @@ const config = {
   }
 };
 
-const browserifyOptions = {
+// Browserify specific configuration
+const browserifyOpts = assign({}, watchify.args, {
   entries: [config.paths.entry],
   debug: true
-};
-const opts = assign({}, watchify.args, browserifyOptions);
-const b = watchify(browserify(opts));
+});
+const b = watchify(browserify(browserifyOpts));
 b.transform('babelify')
 b.on('update', bundle);
 b.on('log', gutil.log);
 
-gulp.task('server', () => {
-  nodemon({
-    script: 'app.js'
-  });
-});
+/**
+* Gulp Tasks
+**/
 
-gulp.task('open', ['server'], () => {
-  gulp.src(config.paths.baseDir + '/index.html')
-  .pipe(open({uri: `http://localhost:${config.port}/`}));
-});
-
+// Clears the contents of the dist and build folder
 gulp.task('clean', () => {
   return del(['dist/**/*', 'build/**/*']);
 });
 
-gulp.task('test', () => {
-  return gulp.src(config.paths.test, {read: false})
-  .pipe(mocha());
-});
-
+// Linting
 gulp.task('lint', () => {
   return gulp.src(config.paths.js)
   .pipe(eslint())
   .pipe(eslint.format())
 });
 
-gulp.task('js', bundle);
+// Unit tests
+gulp.task('test', () => {
+  return gulp.src(config.paths.test, {read: false})
+  .pipe(mocha());
+});
 
+// Copies our index.html file from the app folder to either the dist or build folder, depending on the node environment
 gulp.task('html', () => {
   return gulp.src(config.paths.html)
   .pipe(gulp.dest(config.paths.baseDir))
   .pipe(cond(!PROD, livereload()));
 });
 
+// Bundles our vendor and custom CSS. Sourcemaps are used in development, while minification is used in production.
 gulp.task('css', () => {
   return gulp.src(
     [
@@ -102,12 +101,33 @@ gulp.task('css', () => {
   .pipe(cond(!PROD, livereload()));
 });
 
+
+// Bundles our JS (see the helper function at the bottom of the file)
+gulp.task('js', bundle);
+
+// Copies font-awesome fonts into either the dist or build folder, depending on the node environment
 gulp.task('fonts', () => {
   return gulp.src('node_modules/font-awesome/fonts/**')
   .pipe(gulp.dest(config.paths.baseDir + '/fonts'));
 });
 
+// Runs an Express server defined in app.js
+gulp.task('server', () => {
+  nodemon({
+    script: 'app.js'
+  });
+});
+
+// Opens a new tab in the browser at the url where our app is being hosted
+gulp.task('open', ['server'], () => {
+  gulp.src(config.paths.baseDir + '/index.html')
+  .pipe(open({uri: `http://localhost:${config.port}/`}));
+});
+
+// Re-runs specific tasks when certain files are changed
 gulp.task('watch', () => {
+  livereload.listen({basePath: 'dist'});
+
   gulp.watch(config.paths.html, ['html']);
   gulp.watch(config.paths.css, ['css']);
   gulp.watch(config.paths.js, () => {
@@ -115,10 +135,12 @@ gulp.task('watch', () => {
   });
 });
 
+// Default task, bundles the entire app and hosts it on an Express server
 gulp.task('default', (cb) => {
   runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
 });
 
+// Bundles our JS using browserify. Sourcemaps are used in development, while minification is used in production.
 function bundle() {
   return b.bundle()
   .on('error', gutil.log.bind(gutil, 'Browserify Error'))
