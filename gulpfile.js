@@ -16,6 +16,7 @@ const gutil = require('gulp-util');
 // Other libraries
 const browserify = require('browserify');
 const del = require('del');
+const hmr = require('browserify-hmr');
 const assign = require('lodash.assign');
 const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
@@ -45,12 +46,14 @@ const config = {
 };
 
 // Browserify specific configuration
-const browserifyOpts = assign({}, watchify.args, {
+const b = browserify({
   entries: [config.paths.entry],
-  debug: true
-});
-const b = watchify(browserify(browserifyOpts));
-b.transform('babelify')
+  debug: true,
+  plugin: [hmr, watchify],
+  cache: {},
+  packageCache: {}
+})
+.transform('babelify');
 b.on('update', bundle);
 b.on('log', gutil.log);
 
@@ -149,6 +152,5 @@ function bundle() {
   .pipe(cond(PROD, minifyJS()))
   .pipe(cond(!PROD, sourcemaps.init({loadMaps: true})))
   .pipe(cond(!PROD, sourcemaps.write()))
-  .pipe(gulp.dest(config.paths.baseDir))
-  .pipe(cond(!PROD, livereload()));
+  .pipe(gulp.dest(config.paths.baseDir));
 }
