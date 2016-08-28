@@ -9,7 +9,6 @@ const buffer = require('vinyl-buffer');
 const nodemon = require('gulp-nodemon');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
-const gulpSequence = require('gulp-sequence');
 const runSequence = require('run-sequence');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
@@ -29,15 +28,21 @@ if (argv.prod) {
 
 let PROD = process.env.NODE_ENV === 'production';
 
+const src = 'app';
 const config = {
   port: PROD ? 8080 : 3000,
   paths: {
-    baseDir: PROD ? 'build' : 'dist'
+    baseDir: PROD ? 'build' : 'dist',
+    html: src + '/index.html',
+    entry: src + '/index.js',
+    js: src + '/**/*.js',
+    test: src +'/**/*.test.js',
+    css: src + '/**/*.scss'
   }
 };
 
 const browserifyOptions = {
-  entries: ['./app/index.js'],
+  entries: [config.paths.entry],
   debug: true
 };
 const opts = assign({}, watchify.args, browserifyOptions);
@@ -58,16 +63,16 @@ gulp.task('open', ['server'], () => {
 });
 
 gulp.task('clean', () => {
-  return del(['./dist/**/*', './build/**/*']);
+  return del(['dist/**/*', 'build/**/*']);
 });
 
 gulp.task('test', () => {
-  return gulp.src('./app/**/*.test.js', {read: false})
+  return gulp.src(config.paths.test, {read: false})
   .pipe(mocha());
 });
 
 gulp.task('lint', () => {
-  return gulp.src('./app/**/*.js')
+  return gulp.src(config.paths.js)
   .pipe(eslint())
   .pipe(eslint.format())
 });
@@ -75,9 +80,9 @@ gulp.task('lint', () => {
 gulp.task('js', bundle);
 
 gulp.task('html', () => {
-  return gulp.src('./app/index.html')
+  return gulp.src(config.paths.html)
   .pipe(gulp.dest(config.paths.baseDir))
-  .pipe(livereload());
+  .pipe(cond(!PROD, livereload()));
 });
 
 gulp.task('css', () => {
@@ -85,7 +90,7 @@ gulp.task('css', () => {
     [
       'node_modules/bootstrap/dist/css/bootstrap.css',
       'node_modules/font-awesome/css/font-awesome.css',
-      './app/**/*.scss'
+      config.paths.css
     ]
   )
   .pipe(cond(!PROD, sourcemaps.init()))
@@ -94,7 +99,7 @@ gulp.task('css', () => {
   .pipe(cond(PROD, minifyCSS()))
   .pipe(cond(!PROD, sourcemaps.write()))
   .pipe(gulp.dest(config.paths.baseDir))
-  .pipe(livereload());
+  .pipe(cond(!PROD, livereload()));
 });
 
 gulp.task('fonts', () => {
@@ -103,9 +108,9 @@ gulp.task('fonts', () => {
 });
 
 gulp.task('watch', () => {
-  gulp.watch('./app/index.html', ['html']);
-  gulp.watch('./app/**/*.scss', ['css']);
-  gulp.watch('./app/**/*.js', () => {
+  gulp.watch(config.paths.html, ['html']);
+  gulp.watch(config.paths.css, ['css']);
+  gulp.watch(config.paths.js, () => {
     runSequence('lint', 'test');
   });
 });
@@ -123,5 +128,5 @@ function bundle() {
   .pipe(cond(!PROD, sourcemaps.init({loadMaps: true})))
   .pipe(cond(!PROD, sourcemaps.write()))
   .pipe(gulp.dest(config.paths.baseDir))
-  .pipe(livereload());
+  .pipe(cond(!PROD, livereload()));
 }
