@@ -1,3 +1,17 @@
-.ContactPage {
+@import '../../styles/variables';
 
+.ContactPage {
+  
+  .icon-container, .icon-description {
+    text-align: center;
+  }
+
+  .icon-description {
+    font-size: $font-lg;
+    margin-top: 10px;
+  }
+
+  .fa {
+    font-size: 80px;
+  }
 }
