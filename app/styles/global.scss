@@ -18,6 +18,35 @@ body {
   h1 {
     margin-top: 0;
     color: white;
+    text-align: center;
+  }
+}
+
+.panel {
+  @media #{$xs} {
+    margin-bottom: 30px;
+  }
+}
+
+.panel-default {
+  border-color: #d2d1d1;
+}
+
+.panel-default > .panel-heading {
+  background-color: $font-green;
+  border-color: lighten($font-green, 5%);
+  color: white;
+}
+
+.list-group {
+  @media #{$xs} {
+    margin-bottom: 30px;
+  }
+}
+
+.well {
+  @media #{$xs} {
+    margin-bottom: 0px;
   }
 }
 
@@ -29,6 +58,19 @@ body {
   border: none;
 }
 
+.navbar-default .navbar-toggle {
+  border: none;
+
+  &:hover, &:focus {
+    background-color: transparent;
+  }
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+  box-shadow: none;
+}
+
 .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
   color: white;
   font-weight: 700;
@@ -37,6 +79,10 @@ body {
 
 .navbar-default .navbar-brand {
   font-size: 22px;
+
+  @media #{$xs} {
+    font-size: 18px;
+  }
 }
 
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {

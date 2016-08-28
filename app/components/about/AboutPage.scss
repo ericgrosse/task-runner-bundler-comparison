@@ -1,13 +1,19 @@
+@import '../../styles/variables';
+
 .AboutPage {
   
   ul.list-group {
     
+    li {
+      border-color: #d2d1d1;
+    }
+
     li:nth-child(even) {
-      background: #95a1d0;
+      background: darken($gray, 5%);
     }
 
     li:nth-child(odd) {
-      background: lighten(#95a1d0, 10%);
+      background: #fdfdfd;
     }
   }
 }

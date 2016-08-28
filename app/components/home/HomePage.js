@@ -14,14 +14,14 @@ class HomePage extends React.Component {
           <Row>
             <Col sm={6}>
               <Panel header="Panel 1">
-                <p>Lorem Ipsum</p>
-                <p>Dolor Amet</p>
+                <p>Content A</p>
+                <p>Content B</p>
               </Panel>
             </Col>
             <Col sm={6}>
               <Panel header="Panel 2">
-                <p>Hello</p>
-                <p>Hi</p>
+                <p>Content A</p>
+                <p>Content B</p>
               </Panel>
             </Col>
           </Row>
