@@ -1,15 +1,63 @@
 @import 'variables';
+@import 'fonts';
 
-/* Bootstrap Overrides */
-.navbar {
-  margin-bottom: 0;
+body {
+  font-family: 'Montserrat', sans-serif;
 }
 
+/**
+* Bootstrap Overrides
+*/
+
 .jumbotron {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 45px;
+  padding-bottom: 45px;
+  margin-bottom: 60px;
+  background: #18BC9C;
 
   h1 {
     margin-top: 0;
+    color: white;
+  }
+}
+
+/* navbar overrides */
+.navbar {
+  margin-bottom: 0;
+  background: #2C3E50;
+  padding: 25px 0;
+  border: none;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.navbar-default .navbar-brand {
+  font-size: $font-lg;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+  color: white;
+}
+
+.navbar-default .navbar-nav>li>a {
+  text-transform: uppercase;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: $font-green;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  background-color: $font-green;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .container > .navbar-header, .container-fluid > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-collapse {
+    margin-right: 30px;
   }
 }

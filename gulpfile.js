@@ -41,7 +41,8 @@ const config = {
     entry: src + '/index.js',
     js: src + '/**/*.js',
     test: src +'/**/*.test.js',
-    css: src + '/**/*.scss'
+    css: src + '/**/*.scss',
+    fonts: src + '/fonts/**/*'
   }
 };
 
@@ -108,9 +109,9 @@ gulp.task('css', () => {
 // Bundles our JS (see the helper function at the bottom of the file)
 gulp.task('js', bundle);
 
-// Copies font-awesome fonts into either the dist or build folder, depending on the node environment
+// Copies fonts into either the dist or build folder, depending on the node environment
 gulp.task('fonts', () => {
-  return gulp.src('node_modules/font-awesome/fonts/**')
+  return gulp.src([config.paths.fonts, 'node_modules/font-awesome/fonts/**'])
   .pipe(gulp.dest(config.paths.baseDir + '/fonts'));
 });
 
