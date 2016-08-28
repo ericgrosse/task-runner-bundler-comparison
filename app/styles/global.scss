@@ -1,5 +1,15 @@
 @import 'variables';
 
-html {
-  padding: 30px;
+/* Bootstrap Overrides */
+.navbar {
+  margin-bottom: 0;
+}
+
+.jumbotron {
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  h1 {
+    margin-top: 0;
+  }
 }

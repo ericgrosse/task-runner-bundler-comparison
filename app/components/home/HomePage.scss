@@ -1,9 +1,5 @@
 @import '../../styles/variables';
 
 .HomePage {
-  font-size: 30px;
 
-  @media #{$xs} {
-    font-size: 2px;
-  }
 }

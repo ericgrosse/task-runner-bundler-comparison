@@ -1,16 +1,36 @@
 import React from 'react';
-import {Link, IndexLink} from 'react-router';
+import {IndexLink} from 'react-router';
+import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap';
+import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 
 class Header extends React.Component {
   render() {
     return (
-      <nav className="Header">
-        <IndexLink to="/" activeClassName="active">Home</IndexLink>
-        {'|'}
-        <Link to="/about" activeClassName="active">About</Link>
-        {'|'}
-        <Link to="/contact" activeClassName="active">Contact</Link>
-      </nav> 
+      <div className="Header">
+        <Navbar>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <IndexLink to="/">Gulp-Browserify Setup</IndexLink>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav>
+              <IndexLinkContainer to="/">
+                <NavItem eventKey={1}>Home</NavItem>
+              </IndexLinkContainer>
+
+              <LinkContainer to="/about">
+                <NavItem eventKey={2}>About</NavItem>
+              </LinkContainer>
+
+              <LinkContainer to="/contact">
+                <NavItem eventKey={3}>Contact</NavItem>
+              </LinkContainer>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+      </div>
     );
   }
 }
