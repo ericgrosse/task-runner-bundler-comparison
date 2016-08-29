@@ -1,6 +1,8 @@
 // Gulp imports
 const gulp = require('gulp');
+const cond = require('gulp-cond');
 const eslint = require('gulp-eslint');
+const insertLines = require('gulp-insert-lines');
 const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
 const gutil = require('gulp-util');
@@ -55,8 +57,10 @@ gulp.task('test', () => {
 
 // Runs an Express server defined in app.js
 gulp.task('server', () => {
+  const server = PROD ? 'server.prod.js' : 'server.dev.js';
+
   nodemon({
-    script: 'app.js'
+    script: server
   });
 });
 
@@ -70,14 +74,17 @@ gulp.task('watch', () => {
 // Copies our index.html file from the app folder to either the dist or build folder, depending on the node environment
 gulp.task('html', () => {
   return gulp.src(config.paths.html)
+  .pipe(cond(PROD, insertLines({
+    before: /<\/head>$/,
+    'lineBefore': '<link rel="stylesheet" href="bundle.css"/>'
+  })))
   .pipe(gulp.dest(config.paths.baseDir));
 });
 
 // Builds the entire web app into either the dist or build folder, depending on the node environment
 gulp.task('build', () => {
-  runSequence('clean', 'html');
-  
   const webpackConfig = PROD ? require('./webpack.config.prod.js') : require('./webpack.config.dev.js');
+  runSequence('clean', 'html');
 
   return gulp.src(config.paths.entry)
   .pipe(webpack(webpackConfig))
