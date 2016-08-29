@@ -29,7 +29,7 @@ module.exports = {
       {test: /\.js$/, include: path.join(__dirname, src), loaders: ['babel']},
       {test: /(\.css|\.scss)$/, loaders: ['style', 'css?sourceMap', 'resolve-url', 'sass?sourceMap']},
       {test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url?limit=100000&name=img/[name].[ext]'},
-      {test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url?limit=100000&name=font/[name].[ext]'}
+      {test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url?limit=100000&name=fonts/[name].[ext]'}
     ]
   },
   sassLoader: {
