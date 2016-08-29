@@ -17,10 +17,6 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 app.use(require('webpack-hot-middleware')(compiler));
 
-// Static middleware
-app.use(express.static(path.join(__dirname, 'app/fonts')));
-app.use(express.static(path.join(__dirname, 'app/styles')));
-
 // API routes
 app.get('/api/sample-route', (req, res) => {
   res.send({
