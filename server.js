@@ -1,9 +1,10 @@
 const express = require('express');
-const app = express();
+const open = require('open');
 const path = require('path');
 
 const baseDir = process.env.NODE_ENV === 'production' ? 'build' : 'dist';
 const port = process.env.NODE_ENV === 'production' ? 8080: 3000;
+const app = express();
 
 app.use(require('connect-livereload')({port: 35729}));
 app.use(express.static(path.join(__dirname, baseDir)));
@@ -22,5 +23,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+  open(`http://localhost:${port}`);
 });

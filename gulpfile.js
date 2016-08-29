@@ -7,7 +7,6 @@ const eslint = require('gulp-eslint');
 const livereload = require('gulp-livereload');
 const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
-const open = require('gulp-open');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const minifyJS = require('gulp-uglify');
@@ -118,14 +117,8 @@ gulp.task('fonts', () => {
 // Runs an Express server defined in app.js
 gulp.task('server', () => {
   nodemon({
-    script: 'app.js'
+    script: 'server.js'
   });
-});
-
-// Opens a new tab in the browser at the url where our app is being hosted
-gulp.task('open', ['server'], () => {
-  gulp.src(config.paths.baseDir + '/index.html')
-  .pipe(open({uri: `http://localhost:${config.port}/`}));
 });
 
 // Re-runs specific tasks when certain files are changed
@@ -141,7 +134,7 @@ gulp.task('watch', () => {
 
 // Default task, bundles the entire app and hosts it on an Express server
 gulp.task('default', (cb) => {
-  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'open', 'watch', cb);
+  runSequence('clean', 'lint', 'test', 'html', 'css', 'js', 'fonts', 'server', 'watch', cb);
 });
 
 // Bundles our JS using browserify. Sourcemaps are used in development, while minification is used in production.
