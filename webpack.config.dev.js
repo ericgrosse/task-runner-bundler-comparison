@@ -1,15 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const src = 'app';
-
 module.exports = {
   debug: true,
   devtool: 'cheap-module-eval-source-map',
   noInfo: false,
   entry: [
     'webpack-hot-middleware/client?reload=true', // reloads the page if hot module reloading fails.
-    './' + src + '/index'
+    './app/index'
   ],
   target: 'web',
   output: {
@@ -18,7 +16,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: './' + src
+    contentBase: './app'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -26,16 +24,16 @@ module.exports = {
   ],
   module: {
     loaders: [
-      {test: /\.js$/, include: path.join(__dirname, src), loaders: ['babel']},
+      {test: /\.js$/, include: path.join(__dirname, 'app'), loaders: ['babel']},
       {test: /(\.css|\.scss)$/, loaders: ['style', 'css?sourceMap', 'resolve-url', 'sass?sourceMap']},
       {test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url?limit=100000&name=img/[name].[ext]'},
       {test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url?limit=100000&name=fonts/[name].[ext]'}
     ]
   },
   sassLoader: {
-    includePaths: [path.resolve('./' + src)]
+    includePaths: [path.resolve('./app')]
   },
   resolve: {
-    root: [path.resolve('./' + src)]
+    root: [path.resolve('./app')]
   }
 };

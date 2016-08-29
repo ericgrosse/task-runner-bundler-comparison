@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const src = 'app';
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production')
 };
@@ -11,7 +10,7 @@ module.exports = {
   debug: true,
   devtool: 'source-map',
   noInfo: false,
-  entry: './' + src + '/index',
+  entry: './app/index',
   target: 'web',
   output: {
     path: __dirname + '/build',
@@ -30,7 +29,7 @@ module.exports = {
   ],
   module: {
     loaders: [
-      {test: /\.js$/, include: path.join(__dirname, src), loaders: ['babel']},
+      {test: /\.js$/, include: path.join(__dirname, 'app'), loaders: ['babel']},
       {test: /\.css$/, loader: ExtractTextPlugin.extract('css?sourceMap')},
       {test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css?sourceMap!resolve-url!sass?sourceMap')},
       {test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url?limit=100000&name=img/[name].[ext]'},
@@ -38,9 +37,9 @@ module.exports = {
     ]
   },
   sassLoader: {
-    includePaths: [path.resolve('./' + src)]
+    includePaths: [path.resolve('./app')]
   },
   resolve: {
-    root: [path.resolve('./' + src)]
+    root: [path.resolve('./app')]
   }
 };

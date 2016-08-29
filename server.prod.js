@@ -7,10 +7,9 @@ const path = require('path');
 // Other variables
 const app = express();
 const port = 8080;
-const src = 'build';
 
 app.use(compression());
-app.use(express.static(src));
+app.use(express.static('build'));
 
 // API routes
 app.get('/api/sample-route', (req, res) => {
@@ -22,7 +21,7 @@ app.get('/api/sample-route', (req, res) => {
 
 // Client routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './', src ,'/index.html'));
+  res.sendFile(path.join(__dirname, './build/index.html'));
 });
 
 app.listen(port, () => {

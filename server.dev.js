@@ -9,7 +9,6 @@ const webpack = require('webpack');
 const app = express();
 const compiler = webpack(config);
 const port = process.env.NODE_ENV === 'production' ? 8080: 3000;
-const src = 'app';
 
 // Webpack middleware
 app.use(require('webpack-dev-middleware')(compiler, {
@@ -19,8 +18,8 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler));
 
 // Static middleware
-app.use(express.static(path.join(__dirname, src + '/fonts')));
-app.use(express.static(path.join(__dirname, src + '/styles')));
+app.use(express.static(path.join(__dirname, 'app/fonts')));
+app.use(express.static(path.join(__dirname, 'app/styles')));
 
 // API routes
 app.get('/api/sample-route', (req, res) => {
@@ -32,7 +31,7 @@ app.get('/api/sample-route', (req, res) => {
 
 // Client routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './', src ,'/index.html'));
+  res.sendFile(path.join(__dirname, './app/index.html'));
 });
 
 app.listen(port, () => {
