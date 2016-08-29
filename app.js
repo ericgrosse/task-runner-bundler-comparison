@@ -1,12 +1,26 @@
+// Imports
+const config = require('./webpack.config.dev');
 const express = require('express');
-const app = express();
+const open = require('open');
 const path = require('path');
+const webpack = require('webpack');
 
-const baseDir = process.env.NODE_ENV === 'production' ? 'build' : 'dist';
+// Other variables
+const app = express();
+const compiler = webpack(config);
 const port = process.env.NODE_ENV === 'production' ? 8080: 3000;
+const src = 'app';
 
-app.use(require('connect-livereload')({port: 35729}));
-app.use(express.static(path.join(__dirname, baseDir)));
+// Webpack middleware
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: config.output.publicPath
+}));
+app.use(require('webpack-hot-middleware')(compiler));
+
+// Static middleware
+app.use(express.static(path.join(__dirname, src + '/fonts')));
+app.use(express.static(path.join(__dirname, src + '/styles')));
 
 // API routes
 app.get('/api/sample-route', (req, res) => {
@@ -18,9 +32,9 @@ app.get('/api/sample-route', (req, res) => {
 
 // Client routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './', baseDir ,'/index.html'));
+  res.sendFile(path.join(__dirname, './', src ,'/index.html'));
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+  open('http://localhost:' + port);
 });

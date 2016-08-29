@@ -1,5 +1,6 @@
 import React from 'react';
 import {Jumbotron, Grid, Row, Col, Well} from 'react-bootstrap';
+import './ContactPage.scss';
 
 class ContactPage extends React.Component {
   render() {

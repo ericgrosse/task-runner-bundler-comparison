@@ -1,5 +1,6 @@
 import React from 'react';
 import {Jumbotron, Grid, Row, Col, ListGroup, ListGroupItem} from 'react-bootstrap';
+import './AboutPage.scss';
 
 class AboutPage extends React.Component {
   render() {

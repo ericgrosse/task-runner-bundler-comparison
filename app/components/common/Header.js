@@ -1,7 +1,8 @@
 import React from 'react';
 import {IndexLink} from 'react-router';
 import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+import {Navbar, Nav, NavItem} from 'react-bootstrap';
+import './Header.scss';
 
 class Header extends React.Component {
   render() {
