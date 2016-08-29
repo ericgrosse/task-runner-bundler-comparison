@@ -49,7 +49,7 @@ const config = {
 const b = browserify({
   entries: [config.paths.entry],
   debug: true,
-  plugin: [hmr, watchify],
+  plugin: PROD ? [] : [hmr, watchify],
   cache: {},
   packageCache: {}
 })
