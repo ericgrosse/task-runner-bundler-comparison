@@ -11,20 +11,11 @@ const app = express();
 const compiler = webpack(config);
 const PROD = process.env.NODE_ENV === 'production';
 const port = PROD ? 8080: 3000;
-const indexBase = PROD ? 'build' : 'app';
+const baseDir = PROD ? 'build' : 'dist';
 
-if (PROD) {
-  app.use(compression());
-  app.use(express.static('build'));
-}
-else {
-  // Webpack middleware
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }));
-  app.use(require('webpack-hot-middleware')(compiler));
-}
+// Middleware
+PROD ? app.use(compression()) : app.use(require('webpack-hot-middleware')(compiler));
+app.use(express.static(baseDir));
 
 // API routes
 app.get('/api/sample-route', (req, res) => {
@@ -36,7 +27,7 @@ app.get('/api/sample-route', (req, res) => {
 
 // Client routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './', indexBase, '/index.html'));
+  res.sendFile(path.join(__dirname, './', baseDir, '/index.html'));
 });
 
 app.listen(port, () => {
