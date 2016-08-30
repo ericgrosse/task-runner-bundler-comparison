@@ -81,11 +81,10 @@ gulp.task('html', () => {
 
 // Builds the entire web app into either the dist or build folder, depending on the node environment
 gulp.task('build', () => {
-  const webpackConfig = PROD ? require('./webpack.config.prod.js') : require('./webpack.config.dev.js');
   runSequence('clean', 'html');
 
   return gulp.src(config.paths.entry)
-  .pipe(webpack(webpackConfig))
+  .pipe(webpack(require('./webpack.config')))
   .pipe(gulp.dest(config.paths.baseDir));
 });
 
