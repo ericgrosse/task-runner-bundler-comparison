@@ -58,7 +58,7 @@ gulp.task('test', () => {
 // Runs an Express server defined in app.js
 gulp.task('server', () => {
   nodemon({
-    script: 'server.dev.js'
+    script: 'server.js'
   });
 });
 
