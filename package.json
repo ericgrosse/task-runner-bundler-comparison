@@ -16,7 +16,7 @@
     "server:prod": "cross-env NODE_ENV=production nodemon server.js",
     "build:html": "node tools/buildHtml.js",
     "prebuild": "npm-run-all clean-build lint test build:html",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
     "postbuild": "npm run server:prod"
   },
   "keywords": [],
