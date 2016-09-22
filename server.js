@@ -14,7 +14,16 @@ const port = PROD ? 8080: 3000;
 const baseDir = PROD ? 'build' : 'dist';
 
 // Middleware
-PROD ? app.use(compression()) : app.use(require('webpack-hot-middleware')(compiler));
+if (PROD) {
+  app.use(compression());
+}
+else {
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true, publicPath: config.output.publicPath
+  }));
+  app.use(require('webpack-hot-middleware')(compiler));
+}
+
 app.use(express.static(baseDir));
 
 // API routes

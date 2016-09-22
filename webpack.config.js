@@ -9,7 +9,7 @@ const PROD = process.env.NODE_ENV === 'production';
 
 module.exports = {
   debug: true,
-  devtool: PROD ? 'source-map' : 'cheap-module-eval-source-map',
+  devtool: PROD ? 'source-map' : 'eval-source-map',
   noInfo: false,
   entry: PROD ? './app/index' :
   [
