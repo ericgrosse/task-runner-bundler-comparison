@@ -11,7 +11,7 @@ class Header extends React.Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              <IndexLink to="/">Gulp-Browserify Setup</IndexLink>
+              <IndexLink to="/">Webpack npm Scripts Setup</IndexLink>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
