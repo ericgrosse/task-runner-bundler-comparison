@@ -32,6 +32,7 @@
     "gulp-mocha": "^3.0.1",
     "gulp-nodemon": "^2.1.0",
     "gulp-util": "^3.0.7",
+    "node-sass": "^3.10.1",
     "open": "0.0.5",
     "resolve-url-loader": "^1.6.0",
     "run-sequence": "^1.2.2",
