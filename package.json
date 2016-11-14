@@ -36,6 +36,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-react-hmre": "^1.1.1",
     "cheerio": "^0.22.0",
+    "colors": "^1.1.2",
     "compression": "^1.6.2",
     "cross-env": "^2.0.0",
     "css-loader": "^0.24.0",
