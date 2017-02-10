@@ -6,7 +6,7 @@ const PROD = process.env.NODE_ENV === 'production';
 const baseDir = PROD ? 'build' : 'dist';
 
 fs.readFile('app/index.html', 'utf8', (err, markup) => {
-  const loadMarkup = cheerio.load(markup);
+  const loadMarkup = cheerio.load(markup, { decodeEntities: false });
   
   if (err) {
     return console.log(err);
